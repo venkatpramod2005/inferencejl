@@ -1,4 +1,9 @@
+import sys
+from pathlib import Path
+
 import streamlit as st
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from llm_chatbot.config import ModelConfig
 from llm_chatbot.gpu import collect_gpu_info
