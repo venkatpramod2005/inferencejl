@@ -41,6 +41,16 @@ pip install torch --index-url https://download.pytorch.org/whl/cu121
 pip install -r requirements.txt
 ```
 
+On an L4/vGPU instance, keep the repo under `/home` if your provider warns that data outside `/home` is temporary:
+
+```bash
+cd /home
+git clone https://github.com/venkatpramod2005/inferencejl.git
+cd inferencejl
+git checkout main
+scripts/setup_l4.sh
+```
+
 Windows PowerShell activation:
 
 ```powershell
@@ -62,6 +72,7 @@ export MAX_NEW_TOKENS=256
 export TEMPERATURE=0.7
 export TOP_P=0.9
 export REQUIRE_CUDA=1
+export HF_HOME=/home/.cache/huggingface
 ```
 
 `HF_TOKEN` is required for gated models. Create it in Hugging Face settings and accept the model license on the model page before first download.
@@ -115,7 +126,27 @@ The script prints generated text plus:
 streamlit run app/streamlit_app.py
 ```
 
+For a persistent L4 instance session, prefer the repo script:
+
+```bash
+scripts/run_streamlit_background.sh
+tail -f streamlit.log
+```
+
 Open the local Streamlit URL in a browser. The sidebar lets you adjust the model ID, 4-bit quantization, token limit, temperature, and top-p. Chat history is stored in the Streamlit session.
+
+## Pause, Resume, and Move Instances
+
+If your provider preserves `/home`, keep this project at `/home/inferencejl` and keep `HF_HOME=/home/.cache/huggingface`. After pausing and resuming the instance, the app process will be stopped, but the repo, virtual environment, and downloaded model cache should remain. Restart it with:
+
+```bash
+cd /home/inferencejl
+scripts/run_streamlit_background.sh
+```
+
+If the instance is unavailable, the chatbot cannot run because inference depends on the L4 GPU. When the instance comes back, the model reloads from the preserved Hugging Face cache instead of downloading again.
+
+To move to a different L4 instance, clone the repo under `/home`, copy or reuse the `.env`, run `scripts/setup_l4.sh`, then start with `scripts/run_streamlit_background.sh`. If you can copy `/home/.cache/huggingface` from the old instance, the new instance can avoid downloading model weights again.
 
 ## Monitor GPU During Chat
 
