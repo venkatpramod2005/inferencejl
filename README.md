@@ -152,10 +152,18 @@ bash scripts/stop_chatbot.sh
 
 If your provider says data outside `/home` is lost after stop/resume, do not keep the repo, `.venv`, `.env`, or model cache under `/root`. The model cache should live under `/home/.cache/huggingface` or another persistent path.
 
-If port `8501` is not public, use an SSH tunnel from your laptop:
+On JarvisLabs container instances, port `6006` is normally the public app port. Set this in `.env`:
 
 ```bash
-ssh -L 8501:127.0.0.1:8501 root@YOUR_INSTANCE_IP
+STREAMLIT_PORT=6006
+```
+
+Then use the JarvisLabs endpoint URL shown for the instance.
+
+If the public endpoint is not available, use an SSH tunnel from your laptop:
+
+```bash
+ssh -L 8501:127.0.0.1:6006 root@YOUR_INSTANCE_IP
 ```
 
 Then open `http://127.0.0.1:8501`.
