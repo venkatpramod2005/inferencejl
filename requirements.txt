@@ -1,4 +1,7 @@
 accelerate
 bitsandbytes
+python-dotenv
 safetensors
+sentencepiece
+streamlit
 transformers
