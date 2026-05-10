@@ -135,6 +135,29 @@ tail -f streamlit.log
 
 Open the local Streamlit URL in a browser. The sidebar lets you adjust the model ID, 4-bit quantization, token limit, temperature, and top-p. Chat history is stored in the Streamlit session.
 
+For a remote L4 instance, keep the project under a persistent directory such as `/home/inferencejl`, then start it as a background service:
+
+```bash
+bash scripts/start_chatbot.sh
+tail -f logs/streamlit.log
+```
+
+Stop it cleanly with:
+
+```bash
+bash scripts/stop_chatbot.sh
+```
+
+If your provider says data outside `/home` is lost after stop/resume, do not keep the repo, `.venv`, `.env`, or model cache under `/root`. The model cache should live under `/home/.cache/huggingface` or another persistent path.
+
+If port `8501` is not public, use an SSH tunnel from your laptop:
+
+```bash
+ssh -L 8501:127.0.0.1:8501 root@YOUR_INSTANCE_IP
+```
+
+Then open `http://127.0.0.1:8501`.
+
 ## Pause, Resume, and Move Instances
 
 If your provider preserves `/home`, keep this project at `/home/inferencejl` and keep `HF_HOME=/home/.cache/huggingface`. After pausing and resuming the instance, the app process will be stopped, but the repo, virtual environment, and downloaded model cache should remain. Restart it with:
@@ -180,6 +203,24 @@ git push -u origin codex-l4-streamlit-chatbot
 ```
 
 Keep secrets out of Git. Use environment variables for `HF_TOKEN` and model settings.
+
+## Moving to a Different Instance
+
+The app does not depend on a hardcoded instance IP. To move to a new L4/vGPU instance:
+
+```bash
+git clone https://github.com/venkatpramod2005/inferencejl.git /home/inferencejl
+cd /home/inferencejl
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+pip install torch --index-url https://download.pytorch.org/whl/cu121
+pip install -r requirements.txt
+cp .env.example .env
+bash scripts/start_chatbot.sh
+```
+
+Set `MODEL_ID`, `HF_TOKEN`, and GPU options in `.env`. If `/home` is persistent, dependencies and downloaded model files remain across pause/resume. If you delete the instance or use non-persistent disk, install dependencies and download the model again on the replacement instance.
 
 ## Current Validation Notes
 

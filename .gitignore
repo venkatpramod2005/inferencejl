@@ -3,5 +3,7 @@ __pycache__/
 *.pyc
 *.log
 .env
+logs/
+streamlit.pid
 .cache/
 .huggingface/
