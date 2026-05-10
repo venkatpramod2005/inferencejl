@@ -43,5 +43,5 @@ class ModelConfig:
             max_new_tokens=env_int("MAX_NEW_TOKENS", 256),
             temperature=env_float("TEMPERATURE", 0.7),
             top_p=env_float("TOP_P", 0.9),
-            require_cuda=env_bool("REQUIRE_CUDA", False),
+            require_cuda=env_bool("REQUIRE_CUDA", True),
         )

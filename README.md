@@ -135,6 +135,8 @@ tail -f streamlit.log
 
 Open the local Streamlit URL in a browser. The sidebar lets you adjust the model ID, 4-bit quantization, token limit, temperature, and top-p. Chat history is stored in the Streamlit session.
 
+This app is designed to run on a machine with an NVIDIA GPU. Streamlit Community Cloud does not provide your L4/vGPU instance, so deploying this repository directly to `streamlit.app` runs on Streamlit's infrastructure instead of your GPU box. Keep `REQUIRE_CUDA=1` for the real deployment so the app fails fast if CUDA is not available, instead of downloading a 7B model onto the wrong machine.
+
 For a remote L4 instance, keep the project under a persistent directory such as `/home/inferencejl`, then start it as a background service:
 
 ```bash
