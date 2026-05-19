@@ -7,7 +7,7 @@ This repo demonstrates running an open-source LLM with GPU acceleration on an NV
 1. Setup Python environment
 2. Install PyTorch, Transformers, Accelerate, bitsandbytes
 3. Verify GPU access
-4. Download open-source model (recommended: Mistral 7B)
+4. Download open-source model (recommended: TinyLlama)
 5. Run inference on L4/vGPU
 6. Monitor VRAM, inference speed, GPU utilization
 
@@ -32,17 +32,8 @@ nvidia-smi
 ## Run Inference
 
 ```bash
-export MODEL_ID=mistralai/Mistral-7B-Instruct-v0.3
-# If the model is gated, set your HF token and accept the license on Hugging Face.
-export HF_TOKEN=YOUR_TOKEN
+export MODEL_ID=TinyLlama/TinyLlama-1.1B-Chat-v1.0
 python scripts/run_inference.py
-```
-
-Optional:
-
-```bash
-# Use 4-bit quantization if you want lower VRAM.
-export USE_4BIT=1
 ```
 
 ## Monitor GPU
@@ -53,10 +44,10 @@ nvidia-smi dmon -s u -c 10
 
 ## Observations
 
-- Model used: TinyLlama/TinyLlama-1.1B-Chat-v1.0 (Mistral 7B requires HF token)
+- Model used: TinyLlama/TinyLlama-1.1B-Chat-v1.0 
 - GPU model: NVIDIA L4
 - VRAM: 22.03 GB total, 2.06 GB peak allocated during inference
 - Inference speed: ~73 tokens/sec (256 tokens run)
 - GPU utilization: dmon sampled ~89% SM, ~84% MEM
-- Notes: TinyLlama is open and runs without an HF token; set HF_TOKEN for Mistral 7B.
+- Notes: TinyLlama is open and runs without an HF token.
 
